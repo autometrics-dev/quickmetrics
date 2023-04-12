@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "declaration": true,
+    "resolveJsonModule": true,
+    "removeComments": true,
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "lib": [
+      "es2019",
+      "dom"
+    ],
+    "module": "commonjs",
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "noUncheckedIndexedAccess": true,
+    "strict": true,
+    "target": "es2019",
+    "rootDir": "./src",
+    "outDir": "./ts",
+    "baseUrl": "./"
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "examples"
+  ]
+}

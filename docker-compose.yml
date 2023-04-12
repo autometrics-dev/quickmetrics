@@ -11,8 +11,15 @@ services:
     ports:
       - "${FP_PUSH_GATEWAY_PORT:-8062}:80" # TODO
     env_file:
-      # NOTE: Later "last in wins" if there are duplicate env vars
+      # NOTE: "Last in wins" if there are duplicate env vars across files
       - ./.env
       - ./prometheus-push-gateway/.env
+  api:
+    build: ./api
+    ports:
+      - "${FP_API_PORT:-8063}:8080"
+    env_file:
+      - ./.env
+      - ./api/.env
 volumes:
   prometheus_data:

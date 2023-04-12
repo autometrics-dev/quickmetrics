@@ -1,19 +1,24 @@
 # Fibermetheus
 
-Quickly set up Prometheus and an aggregation gateway, so you can push metrics to Prometheus locally with autometrics.
+Quickly set up Prometheus and an Aggregation Gateway, so you can push metrics to Prometheus locally with Autometrics.
 
 ## Setup
 
 To run, you need docker and docker compose installed locally, then execute the following:
 
 ```sh
-# Start
+# Start things up
+docker compose up
+
+# NOTE - If you ever make changes, e.g., to the api, you'll want to rebuild the docker images
 docker compose up --build
 ```
 
-Prometheus runs locally on `localhost:8061` and the aggregation gateway runs on `localhost:8062`.
+- Prometheus runs locally on `localhost:8061`
+- Aggregation gateway runs on `localhost:8062`
+- API that proxies to the aggregation gateway runs on `localhost:8063`
 
-Prometheus will scrape the aggregation gateway every 5 seconds.
+Prometheus will scrape the aggregation gateway every 5 seconds, but you can change this in the `prometheus/prometheus.yml` config file.
 
 Go to http://localhost:8061/targets to check the health of the aggregation gateway.
 
@@ -23,7 +28,9 @@ To configure the local Prometheus port, modify the `FP_PROMETHEUS_PORT` environm
 
 To configure the local aggregation gateway port, modify the `FP_PUSH_GATEWAY_PORT` environment variable in the .env file
 
-To configure the scrape interval, modify the `prometheus/prometheus.yml` file and re-run docker compose
+To configure the api proxy to the aggregation gateway port, modify the `FP_API_PORT` environment variable in the .env file
+
+To configure the scrape interval, modify the `prometheus/prometheus.yml` file
 
 ## TODO
 
