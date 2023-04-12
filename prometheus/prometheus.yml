@@ -19,3 +19,6 @@ scrape_configs:
     static_configs:
       # NOTE - We use the project name from docker compose as well as the *container* port for the push gateway
       - targets: ["prometheus-push-gateway:80"]
+
+rule_files:
+  - "/etc/prometheus/autometrics.rules.yml"
