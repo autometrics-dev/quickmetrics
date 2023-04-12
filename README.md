@@ -32,6 +32,20 @@ To configure the api proxy to the aggregation gateway port, modify the `FP_API_P
 
 To configure the scrape interval, modify the `prometheus/prometheus.yml` file
 
+## Test it out
+
+Push metrics to the api that's sitting in front of the aggregation gateway:
+
+```sh
+echo '
+http_requests_total{result="ok", function="curl", module=""} 1027
+http_errors_total{result="error", function="curl", module=""} 6
+' | curl --data-binary @- http://localhost:8063/metrics/
+
+```
+
+Look for the metrics in Prometheus: http://localhost:8061/graph. Search for `http_requests_total{function="curl"}` or `http_errors_total{function="curl"}`.
+
 ## TODO
 
 - [ ] Configure Prometheus to scrape an app running on a specific port (so we can then tell someone to run their metrics endpoint on that port and it’ll just work)

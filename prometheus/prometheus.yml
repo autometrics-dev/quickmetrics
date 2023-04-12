@@ -10,11 +10,10 @@ global:
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: "prometheus"
-    # Override the global default and scrape targets from this job every 5 seconds.
-    scrape_interval: 5s
     static_configs:
       - targets: ["localhost:9090"]
   - job_name: "prometheus-push-gateway"
+    # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 5s
     static_configs:
       # NOTE - We use the project name from docker compose as well as the *container* port for the push gateway
