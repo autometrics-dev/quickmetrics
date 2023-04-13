@@ -3,10 +3,11 @@ import cors from "cors";
 import { createProxyMiddleware } from "http-proxy-middleware";
 
 const PORT = 8080;
-const PROXY_URL = process.env.PROXY_URL ?? "zzz";
+const AGGREGATION_GATEWAY_URL = process.env.AGGREGATION_GATEWAY_URL ?? "zzz";
+const PROMETHEUS_URL = process.env.PROMETHEUS_URL ?? "zzz";
 
 export const main = async () => {
-  console.log("Starting api (proxy for /metrics)...");
+  console.log("Starting api (proxy for /metrics, etc)...");
 
   const app = express();
 
@@ -16,14 +17,22 @@ export const main = async () => {
   app.use(
     "/metrics",
     createProxyMiddleware({
-      target: PROXY_URL,
+      target: AGGREGATION_GATEWAY_URL,
       // NOTE - enable this to use response interceptors
       // selfHandleResponse: true,
     })
   );
 
+  app.use(
+    "/",
+    createProxyMiddleware({
+      target: PROMETHEUS_URL,
+    })
+  );
+
   app.listen(PORT, () => {
     console.log(`Listening on http://localhost:${PORT}`);
-    console.log("We will proxy /metrics requests to", PROXY_URL);
+    console.log("We will proxy /metrics requests to", AGGREGATION_GATEWAY_URL);
+    console.log("We will proxy all other requests to", PROMETHEUS_URL);
   });
 };
