@@ -33,6 +33,8 @@ program
   .description("Create new autometrics engine (?)")
   .argument("<name>", "name of project")
   .action(async (name, options) => {
+    await delay(1000);
+
     // - Create `autometrics.yaml` if it does not exist
     console.log(
       "\n🧑‍🎨 Creating autometrics.yaml in current directory for app:",
@@ -44,10 +46,11 @@ program
       console.log("\t* autometrics.yaml created for app:", name);
     } else {
       console.log("\t* autometrics.yaml already exists");
-      // return;
     }
+
     // - Provision new prometheus instance
     // - Generate an auth token
+    await delay(2500);
     console.log("\n💾 Provisioning metrics instance...");
     const { token, url, composeProcess } = await provisionPrometheus(name);
     console.log("✅ ...Success!\n");
@@ -68,10 +71,12 @@ program
       });
 
       if (appendedUrl) {
-        console.log(`\t* ✅ Appended ${METRICS_URL_NAME}=${url}`);
+        await delay(1500);
+        console.log(`✅ Appended ${METRICS_URL_NAME}=${url} to .env file`);
       }
       if (appendedToken) {
-        console.log(`\t* ✅ Appended ${METRICS_TOKEN_NAME}=${token}`);
+        await delay(1500);
+        console.log(`✅ Appended ${METRICS_TOKEN_NAME}=${token} to .env file`);
       }
     } else {
       console.log("\n🚨 .env file does not exist\n");
@@ -107,7 +112,6 @@ program
     return Promise.resolve();
   });
 
-// TODO -
 program
   .command("status")
   .description("Create new autometrics engine (?)")
@@ -122,7 +126,6 @@ program
     // - Destroy prometheus instance
     console.log("\n🪄 Checking metrics instance output...");
     const output = await getPrometheusStatus(name);
-    console.log("✅ ...Success!\n");
 
     return Promise.resolve();
   });
@@ -131,6 +134,9 @@ program.parseAsync();
 
 // Subtask helpers
 
+/**
+ * Creates an `autometrics.yml` file in the current directory, if it doesn't already exist
+ */
 function createAutometricsYaml({ name }) {
   const automericsFilePath = getAutometricsYmlPath();
   if (fs.existsSync(automericsFilePath)) {
@@ -140,29 +146,31 @@ function createAutometricsYaml({ name }) {
   return true;
 }
 
+/**
+ * Executes `docker-compose ps` for the service folder
+ */
 async function getPrometheusStatus(name) {
-  await delay(1500);
-
   const composeFile = getDockerComposeFilePath();
-
-  // console.log("\t[debug] * Compose file:", composeFile);
-
   const composeProcess = spawnSync("docker-compose", ["-f", composeFile, "ps"]);
 
-  // TODO - check output
-  console.log("OUTPUT::::\n", composeProcess.output.toString());
+  // NOTE - Just prints the output of Docker compose command
+  console.log("\n", composeProcess.output.toString());
 
   return;
 }
 
+/**
+ * Executes `docker-compose up --build` for the service folder.
+ * Returns the hardcoded URL used by the service, as well as a "token",
+ * which isn't actually used for anything at the moment.
+ */
 async function provisionPrometheus(name) {
   await delay(1500);
 
   const composeFile = getDockerComposeFilePath();
 
-  // console.log("\t[debug] * Compose file:", composeFile);
-
   // Spawn new Docker Compose subprocess
+  // NOTE - Could put this in the background, then pull status with `ps`
   const composeProcess = spawn(
     "docker-compose",
     ["-f", composeFile, "up", "--build"],
@@ -183,24 +191,28 @@ async function provisionPrometheus(name) {
   return { token: METRICS_TOKEN, url: METRICS_URL, composeProcess };
 }
 
+/**
+ * Executes `docker-compose down` for the service folder
+ */
 async function destroyPrometheus(name) {
-  await delay(1500);
-
   const composeFile = getDockerComposeFilePath();
-  console.log("\t[debug] * Compose file:", composeFile);
 
-  // Spawn new Docker Compose subprocess
   const composeProcess = spawnSync("docker-compose", [
     "-f",
     composeFile,
     "down",
   ]);
 
-  // TODO - check for errors
+  // Uncomment to print the output of Docker compose command... but it could be super long
+  // console.log("\n", composeProcess.output.toString());
 
   return;
 }
 
+/**
+ * If a dotenv file exists in the current directory, appends the url and token to it.
+ * If the file already contains the url or token, does NOT overwrite the values
+ */
 function appendToEnvFile({ token, url }) {
   const envFilePath = path.resolve(process.cwd(), ".env");
 
@@ -216,14 +228,20 @@ function appendToEnvFile({ token, url }) {
     const hasMetricsUrl = envVars.some(([key]) => key === METRICS_URL_NAME);
     const hasMetricsToken = envVars.some(([key]) => key === METRICS_TOKEN_NAME);
 
+    const toAppend = [];
+
     if (!hasMetricsUrl) {
-      fs.appendFileSync(envFilePath, `\n${METRICS_URL_NAME}=${url}\n`);
+      toAppend.push(`\n${METRICS_URL_NAME}=${url}\n`);
       appendedUrl = true;
     }
 
     if (!hasMetricsToken) {
-      fs.appendFileSync(envFilePath, `\n${METRICS_TOKEN_NAME}=${token}\n`);
+      toAppend.push(`\n${METRICS_TOKEN_NAME}=${token}\n`);
       appendedToken = true;
+    }
+
+    if (toAppend.length > 0) {
+      fs.appendFileSync(envFilePath, `\n${toAppend.join("\n")}\n`);
     }
   }
 
