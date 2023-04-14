@@ -12,6 +12,16 @@ scrape_configs:
   - job_name: "prometheus"
     static_configs:
       - targets: ["localhost:9090"]
+
+  # This job tries to scrape data from the host machine on port 8080. This way
+  # not everything needs to be run inside the docker-compose set up
+  - job_name: "host-machine"
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+    static_configs:
+      # NOTE - We use the project name from docker compose as well as the *container* port for the push gateway
+      - targets: ["host.docker.internal:8080"]
+
   - job_name: "prometheus-push-gateway"
     # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 5s

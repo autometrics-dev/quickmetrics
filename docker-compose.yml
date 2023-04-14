@@ -1,13 +1,20 @@
 version: "3.9"
 services:
   prom:
-    build: ./prometheus
+    # MAke host.docker.internal available for all? platforms
+    # On certain platforms like linux or with certain alternatives for
+    # docker host.docker.internal is not available. This is a workaround
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    image: prom/prometheus
     ports:
       - "${FP_PROM_PORT:-8061}:9090"
     volumes:
       - prometheus_data:/prometheus
+      - ./prometheus/autometrics.rules.yml:/etc/prometheus/autometrics.rules.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
   prometheus-push-gateway:
-    build: ./prometheus-push-gateway
+    image: ghcr.io/zapier/prom-aggregation-gateway:v0.7.0
     ports:
       - "${FP_PUSH_GATEWAY_PORT:-8062}:80" # TODO
     env_file:
