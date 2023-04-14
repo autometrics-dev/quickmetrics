@@ -10,6 +10,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "autometrics": "auotmetrics-cli.js"
+  },
   "author": "",
   "license": "MIT",
   "dependencies": {
