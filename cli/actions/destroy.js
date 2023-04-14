@@ -11,8 +11,7 @@ export const destroy = async (name, options) => {
     "...\n"
   );
 
-  // - Destroy prometheus instance
-  console.log("\n🦖 Destroying metrics instance...");
+  console.log("🦖 Destroying metrics instance...");
   const output = await destroyPrometheus(appName);
   console.log("✅ ...Success! It is gone\n");
   // Uncomment to print the output of Docker compose command... but it could be super long

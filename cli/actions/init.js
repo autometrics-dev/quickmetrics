@@ -16,27 +16,22 @@ import {
   METRICS_URL_NAME,
 } from "../constants.js";
 
-export const create = async (name, options) => {
+export const init = async (name, options) => {
   await delay(1000);
 
-  // - Get name of project
+  // Get name of project, fall back to name of current dir
   const appName = name ?? path.basename(process.cwd());
 
-  // - Create `autometrics.yaml` if it does not exist
-  console.log(
-    "\n🧑‍🎨 Creating autometrics.yaml in current directory for app:",
-    appName,
-    "...\n"
-  );
+  console.log("\n🧑‍🎨 Creating autometrics.yaml in current directory...");
+  console.log("💻 Using app name", appName);
   const wasCreated = createAutometricsYaml({ appName });
   if (wasCreated) {
-    console.log("\t* autometrics.yaml created for app:", appName);
+    console.log("✅ autometrics.yaml created for app:", appName);
   } else {
-    console.log("\t* autometrics.yaml already exists");
+    console.log("🛹 autometrics.yaml already exists! Skipping...");
   }
 
-  // - Provision new prometheus instance
-  // - Generate an auth token
+  // Provision new prometheus instance we can talk to
   await delay(2500);
   console.log("\n💾 Provisioning metrics instance...");
   const { token, url, composeProcess } = await provisionPrometheus(appName);
@@ -44,7 +39,7 @@ export const create = async (name, options) => {
   console.log("\t* Endpoint:", url);
   console.log("\t* Token:", token);
 
-  // - Add url and token to app environment
+  // Add url and token to app environment
   if (getHasEnvFile()) {
     console.log(
       "\n📝 Adding the following environment variables to .env file (if it exists):\n"
@@ -60,10 +55,18 @@ export const create = async (name, options) => {
     if (appendedUrl) {
       await delay(1500);
       console.log(`🪄 Appended ${METRICS_URL_NAME}=${url} to .env file`);
+    } else {
+      console.log(
+        `🚤 ${METRICS_URL_NAME} already exists in .env file... skipping`
+      );
     }
     if (appendedToken) {
       await delay(1500);
       console.log(`🪄 Appended ${METRICS_TOKEN_NAME}=${token} to .env file`);
+    } else {
+      console.log(
+        `🚤 ${METRICS_TOKEN_NAME} already exists in .env file... skipping`
+      );
     }
   } else {
     console.log("\n🚨 .env file does not exist\n");
@@ -74,7 +77,7 @@ export const create = async (name, options) => {
     console.log(`\t* ${METRICS_TOKEN_NAME}=${token}`);
   }
 
-  // HACK - Should allow the process to terminate (but not working right now...)
+  // HACK - This should allow the process to terminate (but not working right now...)
   composeProcess.unref();
 
   return;

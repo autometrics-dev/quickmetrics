@@ -10,3 +10,10 @@ Both folders have READMEs to explain what they do.
 - Docker
 - Docker Compose
 - Node.js v16 or higher
+
+## Setup
+
+- Install all the requirements above (Docker, Docker Compose, Node.js)
+- `cd cli` and run `npm install` to install the CLI tool dependencies.
+- Add an alias to the cli `alias autometrics="node /path/to/fibermetheus/cli/autometrics-cli.js"`
+- Run `autometrics init` to

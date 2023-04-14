@@ -11,10 +11,9 @@ export const status = async (name, options) => {
     "...\n"
   );
 
-  // - Destroy prometheus instance
-  console.log("\n🪄 Checking metrics instance output...");
+  console.log("🪄 Checking metrics instance output...");
   const output = await getPrometheusStatus(appName);
-  console.log("\n", output);
+  console.log("\n", trimCommas(output));
 
   return output;
 };
@@ -29,4 +28,8 @@ async function getPrometheusStatus(name) {
   const composeProcess = spawnSync("docker-compose", ["-f", composeFile, "ps"]);
 
   return composeProcess.output.toString();
+}
+
+function trimCommas(str) {
+  return str.replace(/^\s*,/g, "").replace(/\s*,\s*$/g, "");
 }

@@ -1,6 +1,6 @@
 import { Command } from "commander";
 
-import { create } from "./actions/create.js";
+import { init } from "./actions/init.js";
 import { destroy } from "./actions/destroy.js";
 import { status } from "./actions/status.js";
 
@@ -12,10 +12,10 @@ program
   .version("0.8.0");
 
 program
-  .command("create")
+  .command("init")
   .description("Create and configure a new autometrics gateway for your app")
   .argument("[name]", "name of project (defaults to name of current dir)")
-  .action(create);
+  .action(init);
 
 program
   .command("destroy")
