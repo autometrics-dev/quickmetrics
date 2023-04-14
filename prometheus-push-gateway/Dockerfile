@@ -1,1 +1,0 @@
-FROM ghcr.io/zapier/prom-aggregation-gateway:v0.7.0
