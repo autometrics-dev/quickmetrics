@@ -30,20 +30,23 @@ scrape_config:
 
 program
   .command("create")
-  .description("Create new autometrics engine (?)")
-  .argument("<name>", "name of project")
+  .description("Create and configure a new autometrics gateway for your app")
+  .argument("[name]", "name of project (defaults to name of current dir)")
   .action(async (name, options) => {
     await delay(1000);
+
+    // - Get name of project
+    const appName = name ?? path.basename(process.cwd());
 
     // - Create `autometrics.yaml` if it does not exist
     console.log(
       "\n🧑‍🎨 Creating autometrics.yaml in current directory for app:",
-      name,
+      appName,
       "...\n"
     );
-    const wasCreated = createAutometricsYaml({ name });
+    const wasCreated = createAutometricsYaml({ appName });
     if (wasCreated) {
-      console.log("\t* autometrics.yaml created for app:", name);
+      console.log("\t* autometrics.yaml created for app:", appName);
     } else {
       console.log("\t* autometrics.yaml already exists");
     }
@@ -52,7 +55,7 @@ program
     // - Generate an auth token
     await delay(2500);
     console.log("\n💾 Provisioning metrics instance...");
-    const { token, url, composeProcess } = await provisionPrometheus(name);
+    const { token, url, composeProcess } = await provisionPrometheus(appName);
     console.log("✅ ...Success!\n");
     console.log("\t* Endpoint:", url);
     console.log("\t* Token:", token);
@@ -63,7 +66,7 @@ program
         "\n📝 Adding the following environment variables to .env file (if it exists):\n"
       );
       console.log(`\t* ${METRICS_URL_NAME}=${url}`);
-      console.log(`\t* ${METRICS_TOKEN_NAME}=${token}`);
+      console.log(`\t* ${METRICS_TOKEN_NAME}=${token}\n`);
 
       const { hasEnvFile, appendedUrl, appendedToken } = appendToEnvFile({
         token,
@@ -87,7 +90,7 @@ program
       console.log(`\t* ${METRICS_TOKEN_NAME}=${token}`);
     }
 
-    // HACK - allows process to terminate (but not working rn...)
+    // HACK - allows process to terminate (but not working right now...)
     composeProcess.unref();
 
     return Promise.resolve();
@@ -96,17 +99,19 @@ program
 program
   .command("destroy")
   .description("Create new autometrics engine (?)")
-  .argument("<name>", "name of project")
+  .argument("[name]", "name of project")
   .action(async (name, options) => {
+    const appName = name ?? getAppNameFromConfig();
+
     console.log(
       "\n📚 Reading autometrics.yaml from the current directory for app:",
-      name,
+      appName,
       "...\n"
     );
 
     // - Destroy prometheus instance
     console.log("\n🦖 Destroying metrics instance...");
-    const output = await destroyPrometheus(name);
+    const output = await destroyPrometheus(appName);
     console.log("✅ ...Success! It is gone\n");
 
     return Promise.resolve();
@@ -115,17 +120,19 @@ program
 program
   .command("status")
   .description("Create new autometrics engine (?)")
-  .argument("<name>", "name of project")
+  .argument("[name]", "name of project")
   .action(async (name, options) => {
+    const appName = name ?? getAppNameFromConfig();
+
     console.log(
       "\n📚 Reading autometrics.yaml from the current directory for app:",
-      name,
+      appName,
       "...\n"
     );
 
     // - Destroy prometheus instance
     console.log("\n🪄 Checking metrics instance output...");
-    const output = await getPrometheusStatus(name);
+    const output = await getPrometheusStatus(appName);
 
     return Promise.resolve();
   });
@@ -137,12 +144,12 @@ program.parseAsync();
 /**
  * Creates an `autometrics.yml` file in the current directory, if it doesn't already exist
  */
-function createAutometricsYaml({ name }) {
+function createAutometricsYaml({ appName }) {
   const automericsFilePath = getAutometricsYmlPath();
   if (fs.existsSync(automericsFilePath)) {
     return false;
   }
-  fs.writeFileSync(automericsFilePath, YAML_TEMPLATE.replace("<app>", name));
+  fs.writeFileSync(automericsFilePath, YAML_TEMPLATE.replace("<app>", appName));
   return true;
 }
 
@@ -231,12 +238,12 @@ function appendToEnvFile({ token, url }) {
     const toAppend = [];
 
     if (!hasMetricsUrl) {
-      toAppend.push(`\n${METRICS_URL_NAME}=${url}\n`);
+      toAppend.push(`${METRICS_URL_NAME}=${url}`);
       appendedUrl = true;
     }
 
     if (!hasMetricsToken) {
-      toAppend.push(`\n${METRICS_TOKEN_NAME}=${token}\n`);
+      toAppend.push(`${METRICS_TOKEN_NAME}=${token}`);
       appendedToken = true;
     }
 
@@ -249,6 +256,16 @@ function appendToEnvFile({ token, url }) {
 }
 
 // Generic Utils
+
+function getAppNameFromConfig() {
+  const config = getAutometricsYmlPath();
+  const configContents = fs.existsSync(config)
+    ? fs.readFileSync(config, "utf8")
+    : "";
+  const re = /app_name: \"([^"]*)\"/;
+  const match = configContents.match(re);
+  return match ? match[1] : null;
+}
 
 function getDockerComposeFilePath() {
   return path.resolve(__dirname, "..", "service", "docker-compose.yml");
