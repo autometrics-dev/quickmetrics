@@ -1,6 +1,8 @@
-# Fibermetheus
+# Quickmetrics
 
-Quickly set up Prometheus and an Aggregation Gateway, so you can push metrics to Prometheus locally with Autometrics.
+> NOTE: This is for demonstration purposes only. Not intended for use in production infrastructure.
+
+Quickly set up metrics with Prometheus and an Aggregation Gateway, so you can push metrics to Prometheus locally with [Autometrics](https://autometrics.dev/).
 
 ## Setup
 
@@ -46,3 +48,7 @@ http_errors_total{result="error", function="curl", module=""} 6
 ```
 
 Then, look for the metrics in Prometheus: http://localhost:8061/graph. Search for `http_requests_total{function="curl"}` or `http_errors_total{function="curl"}`.
+
+## Thanks
+
+This makes use of Zapier's [prom-aggregation-gateway](https://github.com/zapier/prom-aggregation-gateway) to support client-side (browser) metrics.
