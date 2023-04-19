@@ -4,7 +4,7 @@ Quickly set up Prometheus and an Aggregation Gateway, so you can push metrics to
 
 ## Setup
 
-To run, you need docker and docker compose installed locally, then execute the following:
+To run, you need docker (and docker compose) installed locally.
 
 ```sh
 # Start things up
@@ -14,9 +14,10 @@ docker compose up
 docker compose up --build
 ```
 
-- Prometheus runs locally on `localhost:8061`, and loads the rules from `prometheus/autometrics.rules.yml`
-- Aggregation gateway runs on `localhost:8062`
-- API that proxies to the aggregation gateway runs on `localhost:8063`
+- Prometheus runs locally on `localhost:8061`, and loads autometrics alerting rules from `prometheus/autometrics.rules.yml`
+- Prometheus will try to scrape `localhost:8080/metrics` by default. You can change this under `scrape_configs` in `prometheus/prometheus.yml`
+- The aggregation gateway runs on `localhost:8062`
+- An API runs on `localhost:8063` and will proxy requests to `/metrics` to the aggregation gateway, setting proper CORS headers so you can push metrics from the browser
 
 Prometheus will scrape the aggregation gateway every 5 seconds, but you can change this in the `prometheus/prometheus.yml` config file.
 
@@ -34,7 +35,7 @@ To configure the scrape interval, modify the `prometheus/prometheus.yml` file
 
 ## Test it out
 
-Push metrics to the api that's sitting in front of the aggregation gateway:
+Once you've spun up the containers, you can push metrics to the api that's sitting in front of the aggregation gateway:
 
 ```sh
 echo '
@@ -44,16 +45,4 @@ http_errors_total{result="error", function="curl", module=""} 6
 
 ```
 
-Look for the metrics in Prometheus: http://localhost:8061/graph. Search for `http_requests_total{function="curl"}` or `http_errors_total{function="curl"}`.
-
-## TODO
-
-- [ ] Configure Prometheus to scrape an app running on a specific port (so we can then tell someone to run their metrics endpoint on that port and it’ll just work)
-
-- [x] Configure the Aggregation gateway to listen on a specific port (so pushing metrics should hopefully work out of the box)
-
-- [x] Set the scrape interval
-
-- [x] Use the Autometrics alerting rules file
-
-- [x] Configure Prometheus to scrape the aggregation gateway
+Then, look for the metrics in Prometheus: http://localhost:8061/graph. Search for `http_requests_total{function="curl"}` or `http_errors_total{function="curl"}`.
