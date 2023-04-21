@@ -1,6 +1,5 @@
-FROM node:16-bullseye
+FROM node:18-bullseye-slim
 
-RUN mkdir /app
 WORKDIR /app
 
 COPY *.json ./

@@ -1,14 +1,15 @@
 version: "3.9"
 services:
   prom:
-    # MAke host.docker.internal available for all? platforms
+    # Make host.docker.internal available for all? platforms
     # On certain platforms like linux or with certain alternatives for
-    # docker host.docker.internal is not available. This is a workaround
+    # docker host.docker.internal is not available. This is a workaround.
+    # You can switch docker to host networking mode for unsupported platforms.
     extra_hosts:
       - host.docker.internal:host-gateway
     image: prom/prometheus
     ports:
-      - "${FP_PROM_PORT:-8061}:9090"
+      - "${FP_PROM_PORT:-9090}:9090"
     volumes:
       - prometheus_data:/prometheus
       - ./prometheus/autometrics.rules.yml:/etc/prometheus/autometrics.rules.yml
@@ -16,14 +17,14 @@ services:
   prometheus-push-gateway:
     image: ghcr.io/zapier/prom-aggregation-gateway:v0.7.0
     ports:
-      - "${FP_PUSH_GATEWAY_PORT:-8062}:80" # TODO
+      - "${FP_PUSH_GATEWAY_PORT:-8081}:80" # TODO
     env_file:
       # NOTE: "Last in wins" if there are duplicate env vars across multiple files
       - ./.env
   api:
     build: ./api
     ports:
-      - "${FP_API_PORT:-8063}:8080"
+      - "${FP_API_PORT:-8082}:8080"
     env_file:
       - ./.env
     environment:
