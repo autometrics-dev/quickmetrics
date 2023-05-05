@@ -21,6 +21,23 @@ services:
     env_file:
       # NOTE: "Last in wins" if there are duplicate env vars across multiple files
       - ./.env
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "${FP_GRAFANA_PORT:-9011}:9011"
+    # FIXME - Because the dashboard json require an input to populate "uid": "${DS_PROMETHEUS}" field,
+    #         we cannot autoload dashboard from this path, unfortunately!
+    # environment:
+    #   GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/var/lib/grafana/dashboards/Autometrics Overview.json"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      # FIXME - This encounters the same error described above re: autoloading dashboards
+      #
+      # - ./grafana/dashboards:/var/lib/grafana/dashboards
+
   api:
     build: ./api
     ports:
@@ -33,3 +50,4 @@ services:
       - DEBUG=http-proxy-middleware*
 volumes:
   prometheus_data:
+  grafana_data:
