@@ -26,13 +26,15 @@ services:
     image: grafana/grafana
     ports:
       - "${FP_GRAFANA_PORT:-9011}:9011"
-    environment:
-      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/var/lib/grafana/dashboards/Autometrics Overview.json"
+    # FIXME - Because the dashboard json require an input to populate "uid": "${DS_PROMETHEUS}" field,
+    #         we cannot autoload dashboard from this path, unfortunately!
+    # environment:
+    #   GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/var/lib/grafana/dashboards/Autometrics Overview.json"
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      # - ./grafana/dashboards:/var/lib/grafana/dashboards
 
   api:
     build: ./api
