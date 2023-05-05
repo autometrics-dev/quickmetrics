@@ -34,6 +34,8 @@ services:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      # FIXME - This encounters the same error described above re: autoloading dashboards
+      #
       # - ./grafana/dashboards:/var/lib/grafana/dashboards
 
   api:
