@@ -1,0 +1,9 @@
+# NOTE - This config generates the following warning:
+#   [Deprecated] the dashboard provisioning config is outdated. please upgrade" filename=/etc/grafana/provisioning/dashboards/all.yml
+
+- name: "default"
+  org_id: 1
+  folder: ""
+  type: "file"
+  options:
+    folder: "/var/lib/grafana/dashboards"

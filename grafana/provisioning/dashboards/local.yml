@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: "default"
+    orgId: 1
+    folder: "" # [Deprecated] The folder property is deprecated. Please use path instead.
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10 #how often Grafana will scan for changed dashboards
+    options:
+      path: /var/lib/grafana/dashboards
