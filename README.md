@@ -4,6 +4,10 @@
 
 Quickly set up metrics with Prometheus and an Aggregation Gateway, so you can push metrics to Prometheus locally with [Autometrics](https://autometrics.dev/).
 
+Test out Autometrics Grafana dashboards as well.
+
+> TODO!!! Instructions
+
 ## Setup
 
 To run, you need docker (and docker compose) installed locally, and a local copy of this repository.

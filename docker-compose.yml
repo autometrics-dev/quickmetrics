@@ -21,6 +21,16 @@ services:
     env_file:
       # NOTE: "Last in wins" if there are duplicate env vars across multiple files
       - ./.env
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "${FP_GRAFANA_PORT:-9011}:9011"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+
   api:
     build: ./api
     ports:
@@ -33,3 +43,4 @@ services:
       - DEBUG=http-proxy-middleware*
 volumes:
   prometheus_data:
+  grafana_data:
