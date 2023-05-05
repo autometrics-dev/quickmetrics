@@ -41,7 +41,7 @@ You can configure the ports on which services are exposed by modifying the `.env
 
 To configure the Prometheus scrape interval, modify the `prometheus/prometheus.yml` file
 
-To load the Grafana Autometrics dashboards, go to Grafana, and import the JSON files located in this repo under `./grafana/dashboards`.
+To load the Grafana Autometrics dashboards, go to Grafana, and import the JSON files located in this repo under `./grafana/dashboards`. These are copy-pasted from the autometrics-shared repo, see [here](https://github.com/autometrics-dev/autometrics-shared#dashboards).
 
 (In a future version, we will try to autoload these dashboards.)
 
