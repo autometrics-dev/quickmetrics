@@ -14,6 +14,9 @@ export const main = async () => {
   // Enable CORS on all routes, fixes a CORS issue that's not yet fixed in `ghcr.io/zapier/prom-aggregation-gateway:v0.7.0`
   app.use(cors());
 
+  // Serve static files from the "build" folder
+  app.use(express.static("/app/build"));
+
   app.use(
     "/metrics",
     createProxyMiddleware({

@@ -42,6 +42,8 @@ services:
     build: ./api
     ports:
       - "${FP_API_PORT:-8082}:8080"
+    volumes:
+      - ../quickmetrics-ui/build:/app/build
     env_file:
       - ./.env
     environment:
