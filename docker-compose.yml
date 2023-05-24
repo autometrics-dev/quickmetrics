@@ -45,7 +45,7 @@ services:
     env_file:
       - ./.env
     environment:
-      - AGGREGATION_GATEWAY_URL=http://prometheus-push-gateway:80/metrics
+      - AGGREGATION_GATEWAY_URL=http://prometheus-push-gateway:80/metrics/
       - PROMETHEUS_URL=http://prom:9090
       - DEBUG=http-proxy-middleware*
 volumes:
