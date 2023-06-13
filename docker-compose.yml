@@ -8,6 +8,12 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     image: prom/prometheus
+    entrypoint: /bin/prometheus 
+             --enable-feature=exemplar-storage 
+             --config.file=/etc/prometheus/prometheus.yml
+             --storage.tsdb.path=/prometheus
+             --web.console.libraries=/usr/share/prometheus/console_libraries
+             --web.console.templates=/usr/share/prometheus/consoles
     ports:
       - "${FP_PROM_PORT:-9090}:9090"
     volumes:
