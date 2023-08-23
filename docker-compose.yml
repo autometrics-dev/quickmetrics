@@ -8,14 +8,14 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     image: prom/prometheus
-    entrypoint: /bin/prometheus 
-             --enable-feature=exemplar-storage 
-             --config.file=/etc/prometheus/prometheus.yml
-             --storage.tsdb.path=/prometheus
-             --web.console.libraries=/usr/share/prometheus/console_libraries
-             --web.console.templates=/usr/share/prometheus/consoles
+    entrypoint: /bin/prometheus
+      --enable-feature=exemplar-storage
+      --config.file=/etc/prometheus/prometheus.yml
+      --storage.tsdb.path=/prometheus
+      --web.console.libraries=/usr/share/prometheus/console_libraries
+      --web.console.templates=/usr/share/prometheus/consoles
     ports:
-      - "${FP_PROM_PORT:-9090}:9090"
+      - "${FP_PROMETHEUS_PORT:-9090}:9090"
     volumes:
       - prometheus_data:/prometheus
       - ./prometheus/autometrics.rules.yml:/etc/prometheus/autometrics.rules.yml
@@ -27,6 +27,17 @@ services:
     env_file:
       # NOTE: "Last in wins" if there are duplicate env vars across multiple files
       - ./.env
+
+  alertmanager:
+    image: prom/alertmanager:v0.23.0
+    restart: unless-stopped
+    ports:
+      - "${FP_ALERTMANAGER_PORT:-9093}:9093"
+    volumes:
+      - "./alertmanager:/config"
+      - alertmanager_data:/data
+    command: --config.file=/config/alertmanager.yml --log.level=debug
+
 
   grafana:
     image: grafana/grafana
@@ -57,3 +68,4 @@ services:
 volumes:
   prometheus_data:
   grafana_data:
+  alertmanager_data:
