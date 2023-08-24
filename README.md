@@ -10,7 +10,7 @@ Test out Autometrics Grafana dashboards as well.
 
 ## Setup
 
-To run, you need docker (and docker compose) installed locally, and a local copy of this repository.
+To run, you need Docker installed locally, and a local copy of this repository.
 
 ```sh
 # Start things up
@@ -24,7 +24,7 @@ docker compose up --build
 - Prometheus will try to scrape `localhost:8080/metrics` by default. You can change this under `scrape_configs` in `prometheus/prometheus.yml`
 - The aggregation gateway runs on `localhost:8081`
 - Grafana runs on `localhost:9011` and does not require a username/password to log in
-- An API runs on `localhost:8082` and will proxy requests to `/metrics` to the aggregation gateway, setting proper CORS headers so you can push metrics from the browser
+- An API runs on `localhost:8081` and will proxy requests to `/metrics` to the aggregation gateway, setting proper CORS headers so you can push metrics from the browser
 
 Prometheus will scrape the aggregation gateway every 5 seconds, but you can change this in the `prometheus/prometheus.yml` config file.
 
