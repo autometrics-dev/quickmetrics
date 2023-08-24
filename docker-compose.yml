@@ -1,5 +1,6 @@
 version: "3.9"
 services:
+  # === PROMETHEUS === #
   prom:
     # Make host.docker.internal available for all? platforms
     # On certain platforms like linux or with certain alternatives for
@@ -20,14 +21,8 @@ services:
       - prometheus_data:/prometheus
       - ./prometheus/autometrics.rules.yml:/etc/prometheus/autometrics.rules.yml
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-  prometheus-push-gateway:
-    image: ghcr.io/zapier/prom-aggregation-gateway:v0.7.0
-    ports:
-      - "${FP_PUSH_GATEWAY_PORT:-8081}:80" # TODO
-    env_file:
-      # NOTE: "Last in wins" if there are duplicate env vars across multiple files
-      - ./.env
 
+  # === ALERT MANAGER === #
   alertmanager:
     image: prom/alertmanager:v0.23.0
     restart: unless-stopped
@@ -38,13 +33,13 @@ services:
       - alertmanager_data:/data
     command: --config.file=/config/alertmanager.yml --log.level=debug
 
-
+  # === GRAFANA === #
   grafana:
     image: grafana/grafana
     ports:
       - "${FP_GRAFANA_PORT:-9011}:9011"
     # FIXME - Because the dashboard json require an input to populate "uid": "${DS_PROMETHEUS}" field,
-    #         we cannot autoload dashboard from this path, unfortunately!
+    #         we cannot autoload autometrics dashboards from this path, unfortunately!
     # environment:
     #   GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/var/lib/grafana/dashboards/Autometrics Overview.json"
     volumes:
@@ -55,6 +50,16 @@ services:
       #
       # - ./grafana/dashboards:/var/lib/grafana/dashboards
 
+  # === AGGREGATION GATEWAY === #
+  prometheus-push-gateway:
+    image: ghcr.io/zapier/prom-aggregation-gateway:v0.7.0
+    ports:
+      - "${FP_PUSH_GATEWAY_PORT:-8081}:80" # TODO
+    env_file:
+      # NOTE: "Last in wins" if there are duplicate env vars across multiple files
+      - ./.env
+
+  # === PROXY FOR AGGREGATION GATEWAY (sets proper CORS headers) === #
   api:
     build: ./api
     ports:
