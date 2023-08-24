@@ -34,10 +34,11 @@ Go to http://localhost:9090/targets to check the health of the aggregation gatew
 
 You can configure the ports on which services are exposed by modifying the `.env` file:
 
-- `FP_PROMETHEUS_PORT` - The port that Prometheus runs on
-- `FP_PUSH_GATEWAY_PORT` - The port that the aggregation gateway runs on
-- `FP_GRAFANA_PORT` - The port that Grafana runs on
-- `FP_API_PORT` - The port that the api proxy to the aggregation gateway port runs on
+- `FP_PROMETHEUS_PORT` - The port that Prometheus runs on, on your machine
+- `FP_PUSH_GATEWAY_PORT` - The port that the aggregation gateway runs on, on your machine
+- `FP_GRAFANA_PORT` - The port that Grafana runs on, on your machine
+- `FP_ALERTMANAGER_PORT` - The port that Alertmanager runs on, on your machine
+- `FP_API_PORT` - The port that the api proxy to the aggregation gateway port runs on, on your machine
 
 To configure the Prometheus scrape interval, modify the `prometheus/prometheus.yml` file
 
@@ -53,7 +54,7 @@ Once you've spun up the containers, you can push metrics to the api that's sitti
 echo '
 http_requests_total{result="ok", function="curl", module=""} 1027
 http_errors_total{result="error", function="curl", module=""} 6
-' | curl --data-binary @- http://localhost:8062/metrics/
+' | curl --data-binary @- http://localhost:8081/metrics/
 
 ```
 
