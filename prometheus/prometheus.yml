@@ -29,6 +29,12 @@ scrape_configs:
       # NOTE - We use the project name from docker compose as well as the *container* port for the push gateway
       - targets: ["prometheus-push-gateway:80"]
 
+  # NOTE - If you're running the Slack app locally, it should generate metrics that you can also inspect
+  - job_name: "slack-app"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["host.docker.internal:3031"]
+
 rule_files:
   - "/etc/prometheus/autometrics.rules.yml"
 

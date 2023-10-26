@@ -50,6 +50,14 @@ services:
       #
       # - ./grafana/dashboards:/var/lib/grafana/dashboards
 
+  # === AUTOMETRICS EXPLORER === #
+  am-proxy:
+    image: autometrics/am-proxy
+    ports:
+      - "6789:6789"
+    environment:
+      - PROMETHEUS_URL=http://prom:9090
+
   # === AGGREGATION GATEWAY === #
   prometheus-push-gateway:
     image: ghcr.io/zapier/prom-aggregation-gateway:v0.7.0
