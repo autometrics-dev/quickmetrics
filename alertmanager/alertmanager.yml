@@ -1,14 +1,32 @@
+# route:
+#   receiver: 'mail'
+#   repeat_interval: 4h
+#   group_by: [ alertname ]
+
+
+# receivers:
+#   - name: 'mail'
+#     email_configs:
+#       - smarthost: 'smtp.gmail.com:465'
+#         auth_username: 'your_mail@gmail.com'
+#         auth_password: ""
+#         from: 'your_mail@gmail.com'
+#         to: 'some_mail@gmail.com'
+
+global:
+  resolve_timeout: 5m
 route:
-  receiver: 'mail'
-  repeat_interval: 4h
-  group_by: [ alertname ]
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s
+  group_interval: 1m # NOTE - artifically low for testing purposes
+  repeat_interval: 5m # NOTE - artifically low for testing purposes
+  receiver: 'autometrics-slack-app'
 
 
 receivers:
-  - name: 'mail'
-    email_configs:
-      - smarthost: 'smtp.gmail.com:465'
-        auth_username: 'your_mail@gmail.com'
-        auth_password: ""
-        from: 'your_mail@gmail.com'
-        to: 'some_mail@gmail.com'
+- name: 'autometrics-slack-app'
+  webhook_configs:
+  - send_resolved: true
+    # url: 'http://host.docker.internal:3033'
+    url: 'http://host.docker.internal:3031/api/alerts'
+

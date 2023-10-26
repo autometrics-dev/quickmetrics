@@ -1,0 +1,72 @@
+{
+  "receiver": "autometrics-slack-app",
+  "status": "firing",
+  "alerts": [
+    {
+      "status": "firing",
+      "labels": {
+        "alertname": "High Latency SLO - 99%",
+        "category": "latency",
+        "objective_name": "Animal API SLO for Low Latency (100ms)",
+        "objective_percentile": "99",
+        "service_name": "autometrics",
+        "severity": "page",
+        "sloth_id": "autometrics-latency-99",
+        "sloth_service": "autometrics",
+        "sloth_severity": "page",
+        "sloth_slo": "latency-99"
+      },
+      "annotations": {
+        "summary": "High latency on the `Animal API SLO for Low Latency (100ms)` SLO for the `autometrics` service",
+        "title": "(page) autometrics latency-99 SLO error budget burn rate is too fast."
+      },
+      "startsAt": "2023-10-25T18:17:41.59Z",
+      "endsAt": "0001-01-01T00:00:00Z",
+      "generatorURL": "http://f595df28f66e:9090/graph?g0.expr=%28max+without+%28sloth_window%29+%28slo%3Asli_error%3Aratio_rate5m%7Bsloth_id%3D%22autometrics-latency-99%22%2Csloth_service%3D%22autometrics%22%2Csloth_slo%3D%22latency-99%22%7D+%3E+%2814.4+%2A+0.01%29%29+and+max+without+%28sloth_window%29+%28slo%3Asli_error%3Aratio_rate1h%7Bsloth_id%3D%22autometrics-latency-99%22%2Csloth_service%3D%22autometrics%22%2Csloth_slo%3D%22latency-99%22%7D+%3E+%2814.4+%2A+0.01%29%29%29+or+%28max+without+%28sloth_window%29+%28slo%3Asli_error%3Aratio_rate30m%7Bsloth_id%3D%22autometrics-latency-99%22%2Csloth_service%3D%22autometrics%22%2Csloth_slo%3D%22latency-99%22%7D+%3E+%286+%2A+0.01%29%29+and+max+without+%28sloth_window%29+%28slo%3Asli_error%3Aratio_rate6h%7Bsloth_id%3D%22autometrics-latency-99%22%2Csloth_service%3D%22autometrics%22%2Csloth_slo%3D%22latency-99%22%7D+%3E+%286+%2A+0.01%29%29%29\u0026g0.tab=1",
+      "fingerprint": "6d3f1b9260f8b14d"
+    },
+    {
+      "status": "firing",
+      "labels": {
+        "alertname": "High Latency SLO - 99%",
+        "category": "latency",
+        "objective_name": "Animal API SLO for Low Latency (100ms)",
+        "objective_percentile": "99",
+        "service_name": "autometrics",
+        "severity": "ticket",
+        "sloth_id": "autometrics-latency-99",
+        "sloth_service": "autometrics",
+        "sloth_severity": "ticket",
+        "sloth_slo": "latency-99"
+      },
+      "annotations": {
+        "summary": "High latency on the `Animal API SLO for Low Latency (100ms)` SLO for the `autometrics` service",
+        "title": "(ticket) autometrics latency-99 SLO error budget burn rate is too fast."
+      },
+      "startsAt": "2023-10-25T18:17:41.59Z",
+      "endsAt": "0001-01-01T00:00:00Z",
+      "generatorURL": "http://f595df28f66e:9090/graph?g0.expr=%28max+without+%28sloth_window%29+%28slo%3Asli_error%3Aratio_rate2h%7Bsloth_id%3D%22autometrics-latency-99%22%2Csloth_service%3D%22autometrics%22%2Csloth_slo%3D%22latency-99%22%7D+%3E+%283+%2A+0.01%29%29+and+max+without+%28sloth_window%29+%28slo%3Asli_error%3Aratio_rate1d%7Bsloth_id%3D%22autometrics-latency-99%22%2Csloth_service%3D%22autometrics%22%2Csloth_slo%3D%22latency-99%22%7D+%3E+%283+%2A+0.01%29%29%29+or+%28max+without+%28sloth_window%29+%28slo%3Asli_error%3Aratio_rate6h%7Bsloth_id%3D%22autometrics-latency-99%22%2Csloth_service%3D%22autometrics%22%2Csloth_slo%3D%22latency-99%22%7D+%3E+%281+%2A+0.01%29%29+and+max+without+%28sloth_window%29+%28slo%3Asli_error%3Aratio_rate3d%7Bsloth_id%3D%22autometrics-latency-99%22%2Csloth_service%3D%22autometrics%22%2Csloth_slo%3D%22latency-99%22%7D+%3E+%281+%2A+0.01%29%29%29\u0026g0.tab=1",
+      "fingerprint": "3caa6ff1e3628e3d"
+    }
+  ],
+  "groupLabels": {
+    "alertname": "High Latency SLO - 99%"
+  },
+  "commonLabels": {
+    "alertname": "High Latency SLO - 99%",
+    "category": "latency",
+    "objective_name": "Animal API SLO for Low Latency (100ms)",
+    "objective_percentile": "99",
+    "service_name": "autometrics",
+    "sloth_id": "autometrics-latency-99",
+    "sloth_service": "autometrics",
+    "sloth_slo": "latency-99"
+  },
+  "commonAnnotations": {
+    "summary": "High latency on the `Animal API SLO for Low Latency (100ms)` SLO for the `autometrics` service"
+  },
+  "externalURL": "http://ebe65a9d046e:9093",
+  "version": "4",
+  "groupKey": "{}:{alertname=\"High Latency SLO - 99%\"}",
+  "truncatedAlerts": 0
+}
