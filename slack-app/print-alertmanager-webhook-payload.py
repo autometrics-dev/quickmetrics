@@ -1,3 +1,6 @@
+# This is a simple python server that can be used as the target of alerts from alertmanager
+# It will log the payload from alertmanager, so you can replay it with a local version of the slack-app integration
+
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 class RequestHandler(BaseHTTPRequestHandler):
@@ -11,7 +14,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         print(post_data)
 
         # Log the data to a file
-        with open('payload.log', 'a') as file:
+        with open('alertmanager-payload.log', 'a') as file:
             file.write(post_data + '\n')
 
         # Send a 200 OK response
