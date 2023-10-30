@@ -19,7 +19,7 @@ route:
   group_by: ['alertname', 'cluster', 'service']
   group_wait: 10s
   group_interval: 1m # NOTE - artifically low for testing purposes
-  repeat_interval: 5m # NOTE - artifically low for testing purposes
+  repeat_interval: 2m # NOTE - artifically low for testing purposes
   receiver: 'autometrics-slack-app'
 
 
